@@ -1,0 +1,5 @@
+# Rust build
+**/target/
+
+# Nix build
+result
