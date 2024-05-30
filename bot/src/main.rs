@@ -1,5 +1,7 @@
 use std::env;
+use std::path::Path;
 
+use serenity::all::{CreateAttachment, CreateMessage};
 use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
@@ -9,7 +11,17 @@ struct Handler;
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content == "!ping" {
+        if msg.content == "!image" {
+            let attachment = CreateAttachment::path(Path::new("/home/kveinbahs/Code/pifijs/file.png")).await;
+            match attachment {
+                Err(why) => println!("Error reading file message: {why:?}"),
+                Ok(content) => {
+                    if let Err(why) = msg.channel_id.send_message(&ctx.http, CreateMessage::new().add_file(content)).await {
+                        println!("Error sending message: {why:?}")
+                    }
+                }
+            }
+        } else if msg.content == "!ping" {
             if let Err(why) = msg.channel_id.say(&ctx.http, "Pong!").await {
                 println!("Error sending message: {why:?}");
             }
