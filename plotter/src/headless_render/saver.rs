@@ -1,8 +1,6 @@
 use crate::{
-    headless_render::crossbeam::MainWorldReceiver, 
-    headless_render::scene_controller::{SceneController, SceneState}
+    config::AppConfig, headless_render::{gpu_crossbeam::MainWorldReceiver, scene_controller::{SceneController, SceneState}}
 };
-
 use bevy::{
     app::AppExit,
     prelude::*,
@@ -10,10 +8,6 @@ use bevy::{
         renderer::RenderDevice,
         texture::TextureFormatPixelInfo,
     },
-};
-use std::{
-    ops::{Deref, DerefMut},
-    path::PathBuf,
 };
 
 /// Setups image saver
@@ -31,12 +25,13 @@ pub struct ImageToSave(pub Handle<Image>);
 
 // Takes from channel image content sent from render world and saves it to disk
 pub fn update(
+    config: Res<AppConfig>,
     images_to_save: Query<&ImageToSave>,
     receiver: Res<MainWorldReceiver>,
+    // mut sender: ResMut<RenderLockSender>,
     mut images: ResMut<Assets<Image>>,
     mut scene_controller: ResMut<SceneController>,
     mut app_exit_writer: EventWriter<AppExit>,
-    mut file_number: Local<u32>,
 ) {
     if let SceneState::Render(n) = scene_controller.state {
         if n < 1 {
@@ -79,21 +74,17 @@ pub fn update(
 
                     // Prepare directory for images, test_images in bevy folder is used here for example
                     // You should choose the path depending on your needs
-                    let images_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("test_images");
-                    info!("Saving image to: {images_dir:?}");
-                    std::fs::create_dir_all(&images_dir).unwrap();
-
-                    // Choose filename starting from 000.png
-                    let image_path = images_dir.join(format!("{:03}.png", file_number.deref()));
-                    *file_number.deref_mut() += 1;
+                    let image_path = &config.path;
+                    info!("Saving image {image_path:?}");
 
                     // Finally saving image to file, this heavy blocking operation is kept here
                     // for example simplicity, but in real app you should move it to a separate task
-                    if let Err(e) = img.save(image_path) {
+                    if let Err(e) = img.save(&image_path) {
                         panic!("Failed to save image: {}", e);
                     };
                 }
                 if scene_controller.single_image {
+                    info!("Exiting renderer");
                     app_exit_writer.send(AppExit::Success);
                 }
             }

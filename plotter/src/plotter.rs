@@ -7,16 +7,21 @@ use bevy::{
     app::ScheduleRunnerPlugin,
     prelude::*,
 };
-use std::time::Duration;
+use std::{path::PathBuf, time::Duration};
 
-pub fn render() {
+pub async fn render(path: &PathBuf) {
     let config = AppConfig {
         width: 1920,
         height: 1080,
+        path: path.clone(),
         single_image: true,
     };
 
+    // Initiate app
     let mut game = App::new();
+
+    // Attach app config
+    game.insert_resource(config.clone());
 
     // Set up headless rendering
     game.insert_resource(SceneController::new(
@@ -24,6 +29,7 @@ pub fn render() {
             config.height,
             config.single_image,
         ))
+        // .insert_resource(render_lock.sender)
         .insert_resource(ClearColor(Color::srgb_u8(0, 0, 0)))
         .add_plugins(
             DefaultPlugins
@@ -49,4 +55,5 @@ pub fn render() {
 
     // Run render
     game.run();
+    info!("Render finished!");
 }

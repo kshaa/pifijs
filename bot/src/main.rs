@@ -1,18 +1,36 @@
 use std::env;
-use std::path::Path;
+use std::path::PathBuf;
+// use std::process::Command;
 
 use serenity::all::{CreateAttachment, CreateMessage};
 use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
+use tokio::process::Command;
 
 struct Handler;
+
+async fn render_image(image_path: &PathBuf) {
+    let renderer = env::var("PIFIJS_RENDERER").expect("Expected PIFIJS_RENDERER in the environment");
+    let result = Command::new(renderer)
+        .arg(&image_path)
+        .output()
+        .await;
+    let output = result.expect("Renderer seems to have failed");
+    let stdout = std::str::from_utf8(output.stdout.as_ref()).unwrap();
+    let stderr = std::str::from_utf8(output.stderr.as_ref()).unwrap();
+    println!("{}", stdout);
+    println!("{}", stderr);
+}
 
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
         if msg.content == "!image" {
-            let attachment = CreateAttachment::path(Path::new("/home/kveinbahs/Code/pifijs/file.png")).await;
+            let image_path = PathBuf::from("/tmp/test.png");
+            render_image(&image_path).await;
+            let attachment = CreateAttachment::path(&image_path).await;
+            std::fs::remove_file(&image_path).unwrap();
             match attachment {
                 Err(why) => println!("Error reading file message: {why:?}"),
                 Ok(content) => {

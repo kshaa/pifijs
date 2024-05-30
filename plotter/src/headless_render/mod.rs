@@ -12,6 +12,6 @@
  * Source: https://github.com/bevyengine/bevy/blob/e208fb70f5b49518fe196d02703ab97060bf6378/examples/app/headless_renderer.rs
  */
 pub mod scene_controller;
-pub mod crossbeam;
+pub mod gpu_crossbeam;
 pub mod saver;
 pub mod image_copy_driver;

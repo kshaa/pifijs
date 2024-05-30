@@ -1,5 +1,5 @@
 use crate::{
-    headless_render::crossbeam::{MainWorldReceiver, RenderWorldSender}, 
+    headless_render::gpu_crossbeam::{MainWorldReceiver, RenderWorldSender}, 
     headless_render::saver::ImageToSave, 
     headless_render::scene_controller::{SceneController, SceneState}
 };
@@ -29,6 +29,7 @@ use std::{
 pub struct ImageCopyPlugin;
 impl Plugin for ImageCopyPlugin {
     fn build(&self, app: &mut App) {
+        info!("Adding ImageCopyPlugin");
         let (s, r) = crossbeam_channel::unbounded();
 
         let render_app = app

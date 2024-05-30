@@ -8,6 +8,7 @@ edition = "2021"
 # headless rendering was added in 0.14.x which is still in dev
 bevy = { git = "https://github.com/bevyengine/bevy.git", rev = "05288ffa329297ef7a74badab1986104b29a9fa1" }
 crossbeam-channel = "0.5.13"
+tokio = { version = "1.0", features = ["full"] }
 
 [lib]
 name = "pifijs_plotter_lib"
