@@ -1,4 +1,4 @@
-use crate::conditional_render::ConditionalRenderTarget;
+use crate::{conditional_render::ConditionalRenderTarget, config::AppConfig};
 
 use bevy::{
     core_pipeline::tonemapping::Tonemapping,
@@ -7,44 +7,21 @@ use bevy::{
 
 pub fn setup_scene(
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
     mut head_render_target: ResMut<ConditionalRenderTarget>,
+    config: Res<AppConfig>,
 ) {
     // Set background color
-    commands.insert_resource(ClearColor(Color::srgb_u8(0, 0, 0)));
+    commands.insert_resource(ClearColor(Color::WHITE));
 
-    // Scene example for non black box picture
-    // circular base
-    commands.spawn(PbrBundle {
-        mesh: meshes.add(Circle::new(4.0)),
-        material: materials.add(Color::WHITE),
-        transform: Transform::from_rotation(Quat::from_rotation_x(-std::f32::consts::FRAC_PI_2)),
-        ..default()
-    });
-    // cube
-    commands.spawn(PbrBundle {
-        mesh: meshes.add(Cuboid::new(1.0, 1.0, 1.0)),
-        material: materials.add(Color::srgb_u8(124, 144, 255)),
-        transform: Transform::from_xyz(0.0, 0.5, 0.0),
-        ..default()
-    });
-    // light
-    commands.spawn(PointLightBundle {
-        point_light: PointLight {
-            shadows_enabled: true,
-            ..default()
-        },
-        transform: Transform::from_xyz(4.0, 8.0, 4.0),
-        ..default()
-    });
+    // Configure camera
+    // commands.spawn(Camera2dBundle::default());
 
-    commands.spawn(Camera3dBundle {
-        projection: Projection::Orthographic(OrthographicProjection {
-            scale: 0.005,
+    commands.spawn(Camera2dBundle {
+        projection: OrthographicProjection {
+            scale: config.scale,
             ..OrthographicProjection::default()
-        }),
-        transform: Transform::from_xyz(0.0, 9.0, 0.0).looking_at(Vec3::ZERO, Vec3::Y),
+        },
+        transform: Transform::from_xyz(config.position.x, config.position.y, 10.0),
         tonemapping: Tonemapping::None,
         camera: Camera {
             // render to image or window
@@ -53,4 +30,13 @@ pub fn setup_scene(
         },
         ..default()
     });
+}
+
+pub fn render_scene(
+    app_config: Res<AppConfig>,
+    mut gizmos: Gizmos,
+) {
+    for linestrip in app_config.linestrips.clone() {
+        gizmos.linestrip_2d(linestrip.points, Color::BLACK);    
+    }
 }
