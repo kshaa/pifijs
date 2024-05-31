@@ -17,21 +17,33 @@ pub async fn render(path: Option<PathBuf>) {
             Vec2::new(-1., 0.),
             Vec2::new(1., 0.)
         )),
-        // Triangle
+        // Triangle A
         Linestrip::new(vec!(
             Vec2::new(-0.5, 0.5),
             Vec2::new(0.5, 0.5),
             Vec2::new(0., -0.5),
             Vec2::new(-0.5, 0.5)
         )),
+        // Triangle B
+        Linestrip::new(vec!(
+            Vec2::new(0.5, 1.5),
+            Vec2::new(1.5, 1.5),
+            Vec2::new(1., 0.5),
+            Vec2::new(0.5, 1.5)
+        )),
     );
+
+    let hardcoded_identity_scale = 0.001;
+    let hardcoded_padding = 1.20;
+    let padded_identity_scale = hardcoded_identity_scale * hardcoded_padding;
+    let placement = Linestrip::placement(linestrips.clone(), padded_identity_scale);
 
     let config = AppConfig {
         width: 1000,
         height: 1000,
         path: path,
-        scale: 0.002, // The smaller the scale, the more zoomed in we are
-        position: Vec2::ZERO,
+        scale: placement.scale, // The smaller the scale, the more zoomed in we are
+        position: placement.position,
         linestrips,
     };
 
