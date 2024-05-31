@@ -4,34 +4,41 @@ use crate::{
 use bevy::prelude::*;
 use std::path::PathBuf;
 
-pub async fn render(path: Option<PathBuf>) {
+pub async fn render(linestrips_serialized: Option<String>, path: Option<PathBuf>) {
     // Create a parser for this and pass it through plotter params
-    let linestrips: Vec<Linestrip> = vec!(
-        // y axis
-        Linestrip::new(vec!(
-            Vec2::new(0., 1.),
-            Vec2::new(0., -1.)
-        )),
-        // y axis
-        Linestrip::new(vec!(
-            Vec2::new(-1., 0.),
-            Vec2::new(1., 0.)
-        )),
-        // Triangle A
-        Linestrip::new(vec!(
-            Vec2::new(-0.5, 0.5),
-            Vec2::new(0.5, 0.5),
-            Vec2::new(0., -0.5),
-            Vec2::new(-0.5, 0.5)
-        )),
-        // Triangle B
-        Linestrip::new(vec!(
-            Vec2::new(0.5, 1.5),
-            Vec2::new(1.5, 1.5),
-            Vec2::new(1., 0.5),
-            Vec2::new(0.5, 1.5)
-        )),
-    );
+    let linestrips: Vec<Linestrip> = (match linestrips_serialized {
+        None => None,
+        Some(serialized) => Linestrip::parse_strips(serialized)
+    }).unwrap(); // Handle parse error
+    
+    // '0.,1.>0.,-1. -1.,0.>1.,0.'
+
+    // vec!(
+    //     // y axis
+    //     Linestrip::new(vec!(
+    //         Vec2::new(0., 1.),
+    //         Vec2::new(0., -1.)
+    //     )),
+    //     // y axis
+    //     Linestrip::new(vec!(
+    //         Vec2::new(-1., 0.),
+    //         Vec2::new(1., 0.)
+    //     )),
+    //     // Triangle A
+    //     Linestrip::new(vec!(
+    //         Vec2::new(-0.5, 0.5),
+    //         Vec2::new(0.5, 0.5),
+    //         Vec2::new(0., -0.5),
+    //         Vec2::new(-0.5, 0.5)
+    //     )),
+    //     // Triangle B
+    //     Linestrip::new(vec!(
+    //         Vec2::new(0.5, 1.5),
+    //         Vec2::new(1.5, 1.5),
+    //         Vec2::new(1., 0.5),
+    //         Vec2::new(0.5, 1.5)
+    //     )),
+    // );
 
     let hardcoded_identity_scale = 0.001;
     let hardcoded_padding = 1.20;
