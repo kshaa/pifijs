@@ -6,6 +6,5 @@ use bevy::ecs::system::Resource;
 pub struct AppConfig {
     pub width: u32,
     pub height: u32,
-    pub path: PathBuf,
-    pub single_image: bool,
+    pub path: Option<PathBuf>,
 }

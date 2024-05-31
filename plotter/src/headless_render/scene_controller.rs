@@ -17,17 +17,15 @@ pub struct SceneController {
     pub name: String,
     pub width: u32,
     pub height: u32,
-    pub single_image: bool,
 }
 
 impl SceneController {
-    pub fn new(width: u32, height: u32, single_image: bool) -> SceneController {
+    pub fn new(width: u32, height: u32) -> SceneController {
         SceneController {
             state: SceneState::BuildScene,
             name: String::from(""),
             width,
             height,
-            single_image,
         }
     }
 }

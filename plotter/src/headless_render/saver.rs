@@ -1,5 +1,11 @@
+
+
 use crate::{
-    config::AppConfig, headless_render::{gpu_crossbeam::MainWorldReceiver, scene_controller::{SceneController, SceneState}}
+    config::AppConfig, 
+    headless_render::{
+        gpu_crossbeam::MainWorldReceiver, 
+        scene_controller::{SceneController, SceneState}
+    }
 };
 use bevy::{
     app::AppExit,
@@ -74,7 +80,7 @@ pub fn update(
 
                     // Prepare directory for images, test_images in bevy folder is used here for example
                     // You should choose the path depending on your needs
-                    let image_path = &config.path;
+                    let image_path = config.path.clone().unwrap();
                     info!("Saving image {image_path:?}");
 
                     // Finally saving image to file, this heavy blocking operation is kept here
@@ -83,10 +89,9 @@ pub fn update(
                         panic!("Failed to save image: {}", e);
                     };
                 }
-                if scene_controller.single_image {
-                    info!("Exiting renderer");
-                    app_exit_writer.send(AppExit::Success);
-                }
+
+                info!("Exiting renderer");
+                app_exit_writer.send(AppExit::Success);
             }
         } else {
             // clears channel for skipped frames

@@ -1,39 +1,18 @@
-use crate::{
-    headless_render::image_copy_driver::setup_render_target, 
-    headless_render::scene_controller::SceneController
-};
+use crate::conditional_render::ConditionalRenderTarget;
 
 use bevy::{
     core_pipeline::tonemapping::Tonemapping,
     prelude::*,
-    render::renderer::RenderDevice,
 };
 
 pub fn setup_scene(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
-    mut images: ResMut<Assets<Image>>,
-    mut scene_controller: ResMut<SceneController>,
-    render_device: Res<RenderDevice>,
+    mut head_render_target: ResMut<ConditionalRenderTarget>,
 ) {
-    let render_target = setup_render_target(
-        &mut commands,
-        &mut images,
-        &render_device,
-        &mut scene_controller,
-        // pre_roll_frames should be big enough for full scene render,
-        // but the bigger it is, the longer example will run.
-        // To visualize stages of scene rendering change this param to 0
-        // and change AppConfig::single_image to false in main
-        // Stages are:
-        // 1. Transparent image
-        // 2. Few black box images
-        // 3. Fully rendered scene images
-        // Exact number depends on device speed, device load and scene size
-        40,
-        "main_scene".into(),
-    );
+    // Set background color
+    commands.insert_resource(ClearColor(Color::srgb_u8(0, 0, 0)));
 
     // Scene example for non black box picture
     // circular base
@@ -61,11 +40,15 @@ pub fn setup_scene(
     });
 
     commands.spawn(Camera3dBundle {
-        transform: Transform::from_xyz(-2.5, 4.5, 9.0).looking_at(Vec3::ZERO, Vec3::Y),
+        projection: Projection::Orthographic(OrthographicProjection {
+            scale: 0.005,
+            ..OrthographicProjection::default()
+        }),
+        transform: Transform::from_xyz(0.0, 9.0, 0.0).looking_at(Vec3::ZERO, Vec3::Y),
         tonemapping: Tonemapping::None,
         camera: Camera {
-            // render to image
-            target: render_target,
+            // render to image or window
+            target: head_render_target.target.take().unwrap(),
             ..default()
         },
         ..default()
