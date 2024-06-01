@@ -8,7 +8,6 @@ use serenity::all::{CreateAttachment, CreateMessage};
 use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
-use rand::prelude::*;
 
 struct Handler;
 impl Handler {
@@ -23,7 +22,7 @@ impl Handler {
     }
 
     pub async fn respond_plot(ctx: Context, msg: Message, plot_request: String) {
-        let id = rand::thread_rng().gen_range(0..i32::MAX);
+        let id = msg.id.get();
         let image_path = PathBuf::from(format!("/tmp/{}.png", id));
         
         render_plot(&image_path, &plot_request).await;
