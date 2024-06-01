@@ -3,6 +3,7 @@ resolver = "2" # required by bevy
 members = [
   "bot",
   "plotter",
+  "domain",
 ]
 
 # Enable a small amount of optimization in debug mode (suggested by bevy)

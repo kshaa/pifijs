@@ -1240,6 +1240,7 @@ dependencies = [
 name = "bot"
 version = "0.1.0"
 dependencies = [
+ "domain",
  "plotter",
  "serenity",
  "tokio",
@@ -1723,6 +1724,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "330c60081dcc4c72131f8eb70510f1ac07223e5d4163db481a04a0befcffa412"
 dependencies = [
  "libloading 0.8.3",
+]
+
+[[package]]
+name = "domain"
+version = "0.1.0"
+dependencies = [
+ "glam",
 ]
 
 [[package]]
@@ -3229,6 +3237,7 @@ version = "0.1.0"
 dependencies = [
  "bevy",
  "crossbeam-channel",
+ "domain",
  "tokio",
 ]
 

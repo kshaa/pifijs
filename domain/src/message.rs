@@ -1,17 +1,17 @@
-use pifijs_plotter_lib::linestrip::Linestrip;
+use crate::linestrip::Linestrip;
 
+#[derive(PartialEq, Clone, Debug)]
 pub enum PifijsMessage {
     Ping(),
-    Plot(String),
+    Plot((String, Vec<Linestrip>)),
 }
 
 impl PifijsMessage {
     pub fn parse_plot(leftovers: String) -> Result<PifijsMessage, String> {
-        let is_parsed_strips = Linestrip::parse_strips(leftovers.clone()).is_some();
-        if is_parsed_strips {
-            Ok(PifijsMessage::Plot(leftovers))
-        } else {
-            Err(String::from(format!("Failed to parse your plot {}. Here's an example: '0,1>0,-1 -1,0>1,0'", leftovers)))
+        let parsed_strips = Linestrip::parse_strips(leftovers.clone());
+        match parsed_strips {
+            Some(parsed) => Ok(PifijsMessage::Plot((leftovers, parsed))),
+            None => Err(String::from(format!("Failed to parse your plot {}. Here's an example: '0,1>0,-1 -1,0>1,0'", leftovers)))
         }
     }
 

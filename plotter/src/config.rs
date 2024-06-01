@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 use bevy::{ecs::system::Resource, math::Vec2};
-
-use crate::linestrip::Linestrip;
+use pifijs_domain_lib::linestrip::Linestrip;
 
 // Parameters of resulting image
 #[derive(Resource, Clone)]

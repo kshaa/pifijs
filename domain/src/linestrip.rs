@@ -1,21 +1,8 @@
 use std::{cmp::Ordering, convert::identity};
-use bevy::math::Vec2;
+use glam::Vec2;
+use crate::placement::Placement;
 
-pub struct Placement {
-    pub position: Vec2,
-    pub scale: f32,
-}
-
-impl Placement {
-    pub fn new(position: Vec2, scale: f32) -> Placement {
-        Placement {
-            position,
-            scale,
-        }
-    }
-}
-
-#[derive(Clone)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct Linestrip {
     pub points: Vec<Vec2>
 }

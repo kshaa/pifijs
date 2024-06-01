@@ -1,7 +1,8 @@
 use crate::{
-    conditional_render::setup_conditional_rendering, config::AppConfig, controls::update_scene_by_keyboard, headless_render::plugin::HeadlessRenderingPlugin, linestrip::Linestrip, scene::{render_scene, setup_scene}, windowed_render::plugin::WindowedRenderingPlugin
+    conditional_render::setup_conditional_rendering, config::AppConfig, controls::update_scene_by_keyboard, headless_render::plugin::HeadlessRenderingPlugin, scene::{render_scene, setup_scene}, windowed_render::plugin::WindowedRenderingPlugin
 };
 use bevy::prelude::*;
+use pifijs_domain_lib::linestrip::Linestrip;
 use std::path::PathBuf;
 
 pub async fn render(linestrips_serialized: Option<String>, path: Option<PathBuf>) {
@@ -10,35 +11,6 @@ pub async fn render(linestrips_serialized: Option<String>, path: Option<PathBuf>
         None => None,
         Some(serialized) => Linestrip::parse_strips(serialized)
     }).unwrap(); // Handle parse error
-    
-    // '0.,1.>0.,-1. -1.,0.>1.,0.'
-
-    // vec!(
-    //     // y axis
-    //     Linestrip::new(vec!(
-    //         Vec2::new(0., 1.),
-    //         Vec2::new(0., -1.)
-    //     )),
-    //     // y axis
-    //     Linestrip::new(vec!(
-    //         Vec2::new(-1., 0.),
-    //         Vec2::new(1., 0.)
-    //     )),
-    //     // Triangle A
-    //     Linestrip::new(vec!(
-    //         Vec2::new(-0.5, 0.5),
-    //         Vec2::new(0.5, 0.5),
-    //         Vec2::new(0., -0.5),
-    //         Vec2::new(-0.5, 0.5)
-    //     )),
-    //     // Triangle B
-    //     Linestrip::new(vec!(
-    //         Vec2::new(0.5, 1.5),
-    //         Vec2::new(1.5, 1.5),
-    //         Vec2::new(1., 0.5),
-    //         Vec2::new(0.5, 1.5)
-    //     )),
-    // );
 
     let hardcoded_identity_scale = 0.001;
     let hardcoded_padding = 1.20;

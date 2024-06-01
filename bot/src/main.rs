@@ -1,8 +1,7 @@
 pub mod plotter;
-pub mod message;
 use std::env;
 use std::path::PathBuf;
-use message::PifijsMessage;
+use pifijs_domain_lib::message::PifijsMessage;
 use plotter::render_plot;
 use serenity::all::{CreateAttachment, CreateMessage};
 use serenity::async_trait;
@@ -47,7 +46,7 @@ impl EventHandler for Handler {
         if let Some(Ok(message)) = parsed {
             match message {
                 PifijsMessage::Ping() => Handler::respond_ping(ctx, msg).await,
-                PifijsMessage::Plot(plot_request) => Handler::respond_plot(ctx, msg, plot_request).await,
+                PifijsMessage::Plot((plot_request, _)) => Handler::respond_plot(ctx, msg, plot_request).await,
             }
         } else if let Some(Err(why)) = parsed {
             Handler::respond_text(ctx, msg, why).await

@@ -9,6 +9,7 @@ edition = "2021"
 bevy = { git = "https://github.com/bevyengine/bevy.git", rev = "05288ffa329297ef7a74badab1986104b29a9fa1" }
 crossbeam-channel = "0.5.13"
 tokio = { version = "1.0", features = ["full"] }
+domain = { path = "../domain" }
 
 [lib]
 name = "pifijs_plotter_lib"
