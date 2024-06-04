@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 glam = { version = "0.27.0" }
+approx = { version = "0.5.1" }
 
 [lib]
 name = "pifijs_domain_lib"

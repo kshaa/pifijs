@@ -37,6 +37,6 @@ pub fn render_scene(
     mut gizmos: Gizmos,
 ) {
     for linestrip in app_config.linestrips.clone() {
-        gizmos.linestrip_2d(linestrip.points, Color::BLACK);    
+        gizmos.linestrip_2d(linestrip.deref(), Color::BLACK);    
     }
 }

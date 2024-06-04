@@ -15,5 +15,5 @@ fn it_can_be_parsed() {
             Vec2::new(1., 0.)
         ))
     )))));
-    assert_eq!(format!("{:?}", parsed), format!("{:?}", expected))
+    assert_eq!(parsed, expected)
 }

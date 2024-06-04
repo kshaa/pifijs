@@ -1,14 +1,23 @@
-use std::{cmp::Ordering, convert::identity};
+use std::{cmp::Ordering, convert::identity, ops::Deref};
 use glam::Vec2;
-use crate::placement::Placement;
+use crate::{placement::Placement, vec::WrappedVec2};
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct Linestrip {
-    pub points: Vec<Vec2>
+    pub points: Vec<WrappedVec2>
 }
+
 impl Linestrip {
     pub fn new(points: Vec<Vec2>) -> Linestrip {
-        Linestrip { points }
+        Linestrip { points: points.into_iter().map(WrappedVec2).collect() }
+    }
+
+    pub fn deref(&self) -> Vec<Vec2> {
+        self.points.iter().map(|p| { p.deref().clone() }).collect::<Vec<Vec2>>()
+    }
+
+    pub fn sum(&self) -> f32 {
+        self.points.iter().map(|p| { p.0.x + p.0.y }).sum::<f32>()
     }
 
     pub fn placement(linestrips: Vec<Linestrip>, identity_scale: f32) -> Placement {
