@@ -9,7 +9,7 @@ pub async fn render(linestrips_serialized: Option<String>, path: Option<PathBuf>
     // Create a parser for this and pass it through plotter params
     let linestrips: Vec<Linestrip> = (match linestrips_serialized {
         None => None,
-        Some(serialized) => Linestrip::parse_strips(serialized)
+        Some(serialized) => Linestrip::parse_multiple(&serialized).ok().map(|(_, strips)| { strips })
     }).unwrap(); // Handle parse error
 
     let hardcoded_identity_scale = 0.001;
